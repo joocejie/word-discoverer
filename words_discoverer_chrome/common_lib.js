@@ -44,6 +44,7 @@ function add_lexeme(lexeme, result_handler) {
             return;
         }
         lexeme = lexeme.toLowerCase();
+        lexeme = lexeme.split('（')[0]; 
         lexeme = lexeme.trim();
         if (!lexeme) {
             result_handler("bad", undefined);

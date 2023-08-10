@@ -267,6 +267,12 @@ function text_to_hl_nodes(text, dst) {
             span.id = 'wdautohl_id_' + cur_wd_node_id;
             cur_wd_node_id += 1;
             var wdclassname = make_class_name(match.normalized);
+            var stripped = match.normalized.replace(/\r/g, '');
+            stripped = stripped.replace(/\n/g, '');
+            var theDict = get_dict();
+            if (theDict.hasOwnProperty(stripped)) {
+                span.innerText = span.innerText + '（' + theDict[stripped] + '）';
+            }
             span.setAttribute("class", wdclassname);
             dst.push(span);
         }
