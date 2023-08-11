@@ -270,7 +270,7 @@ function text_to_hl_nodes(text, dst) {
             var stripped = match.normalized.replace(/\r/g, '');
             stripped = stripped.replace(/\n/g, '');
             var theDict = get_dict();
-            if (theDict.hasOwnProperty(stripped)) {
+            if (theDict != null && theDict.hasOwnProperty(stripped)) {
                 span.innerText = span.innerText + '（' + theDict[stripped] + '）';
             }
             span.setAttribute("class", wdclassname);
