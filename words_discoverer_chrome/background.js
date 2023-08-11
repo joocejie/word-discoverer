@@ -1,3 +1,5 @@
+importScripts('common_lib.js');
+importScripts('context_menu_lib.js');
 var gapi_loaded = false;
 var gapi_inited = false;
 
@@ -27,7 +29,8 @@ function do_load_dictionary(file_text) {
 
 
 function load_eng_dictionary() {
-    var file_path = chrome.extension.getURL("eng_dict.txt");
+    var file_path = chrome.runtime.getURL("eng_dict.txt");
+    /*
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState == XMLHttpRequest.DONE) {
@@ -36,6 +39,12 @@ function load_eng_dictionary() {
     }
     xhr.open('GET', file_path, true);
     xhr.send(null);
+    */
+    fetch(file_path).then(response => response.text())
+      .then(data => {
+        do_load_dictionary(data);
+    })
+    .catch(error => console.error(error));
 }
 
 
@@ -60,7 +69,8 @@ function do_load_idioms(file_text) {
 
 
 function load_idioms() {
-    file_path = chrome.extension.getURL("eng_idioms.txt");
+    file_path = chrome.runtime.getURL("eng_idioms.txt");
+    /*
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState == XMLHttpRequest.DONE) {
@@ -69,6 +79,12 @@ function load_idioms() {
     }
     xhr.open('GET', file_path, true);
     xhr.send(null);
+    */
+    fetch(file_path).then(response => response.text())
+      .then(data => {
+        do_load_idioms(data);
+    })
+    .catch(error => console.error(error));
 }
 
 
