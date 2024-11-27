@@ -10,13 +10,18 @@
     "128": "icon_128.png"
   },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "result48.png",
+      "128": "icon_128.png"
+    }
   },
   "author": "Dmitry Ignatovich",
   "permissions": [
     "storage",
     "unlimitedStorage",
     "contextMenus",
+    "tabs",
     "tts",
     "identity"
   ],

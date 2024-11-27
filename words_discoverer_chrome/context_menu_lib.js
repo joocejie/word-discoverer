@@ -51050,11 +51050,22 @@ function showDefinition(dictUrl, text) {
     });
 }
 
+function createContextMenu(title, entryId) {
+    chrome.contextMenus.create({
+        "title": title,
+        "contexts": ["selection"],  // 可以根据需要更改context
+        "id": entryId
+    });
+}
+
 function createDictionaryEntry(title, dictUrl, entryId) {
-    chrome.contextMenus.create({"title": title, "contexts":["selection"], "id": entryId, "onclick": function(info, tab) {
-        var word = info.selectionText;
-        showDefinition(dictUrl, word);
-    }}); 
+    createContextMenu(title, entryId);
+    chrome.contextMenus.onClicked.addListener(function(info, tab) {
+        if (info.menuItemId === entryId) {
+            var word = info.selectionText;
+            showDefinition(dictUrl, word);
+        }
+    });
 }
 
 function context_handle_add_result(report, lemma) {
@@ -51087,7 +51098,14 @@ function make_default_online_dicts() {
 function initContextMenus(dictPairs) {
     chrome.contextMenus.removeAll(function() {
         var title = chrome.i18n.getMessage("menuItem");
-        chrome.contextMenus.create({"title": title, "contexts":["selection"], "id": "vocab_select_add", "onclick": onClickHandler}); 
+
+        createContextMenu(title, "vocab_select_add");
+        chrome.contextMenus.onClicked.addListener(function(info, tab) {
+            if (info.menuItemId === "vocab_select_add") {
+                return onClickHandler(info, tab);
+            }
+        });
+
         chrome.contextMenus.create({type: 'separator', "contexts":["selection"], "id": "wd_separator_id"});
         for (var i = 0; i < dictPairs.length; ++i) {
             createDictionaryEntry(dictPairs[i].title, dictPairs[i].url, "wd_define_" + i);

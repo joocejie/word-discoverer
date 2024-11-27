@@ -432,7 +432,7 @@ function initialize_extension() {
         } else if (request.wdm_verdict) {
             if (request.wdm_verdict == "highlight") {
                 chrome.storage.local.get(['wd_gd_sync_enabled', 'wd_last_sync_error'], function (result) {
-                    chrome.browserAction.setIcon({path: "result48.png", tabId: sender.tab.id}, function () {
+                    chrome.action.setIcon({path: "result48.png", tabId: sender.tab.id}, function () {
                         if (result.wd_gd_sync_enabled) {
                             if (result.wd_last_sync_error == null) {
                                 chrome.browserAction.setBadgeText({text: 'sync', tabId: sender.tab.id});
@@ -451,9 +451,9 @@ function initialize_extension() {
                     });
                 });
             } else if (request.wdm_verdict == "keyboard") {
-                chrome.browserAction.setIcon({path: "no_dynamic.png", tabId: sender.tab.id});
+                chrome.action.setIcon({path: "no_dynamic.png", tabId: sender.tab.id});
             } else {
-                chrome.browserAction.setIcon({path: "result48_gray.png", tabId: sender.tab.id});
+                chrome.action.setIcon({path: "result48_gray.png", tabId: sender.tab.id});
             }
         } else if (request.wdm_new_tab_url) {
             var fullUrl = request.wdm_new_tab_url;
