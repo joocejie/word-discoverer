@@ -122,8 +122,13 @@ function renderBubble() {
 
 function hideBubble(force) {
     bubbleDOM = document.getElementById("wd_selection_bubble");
+    if (bubbleDOM == null) {
+        return;
+    }
     if (force || (!bubbleDOM.wdMouseOn && (node_to_render_id != rendered_node_id))) {
-        bubbleDOM.style.display = 'none';
+        if (bubbleDOM != null && bubbleDOM.style != null) {
+            bubbleDOM.style.display = 'none';
+        }
         rendered_node_id = null;
     }
 }
@@ -537,7 +542,21 @@ function initForPage() {
             document.body.appendChild(bubbleDOM);
             document.addEventListener('mousedown', hideBubble(true), false);
             document.addEventListener('mousemove', processMouse, false);
-            document.addEventListener("DOMNodeInserted", onNodeInserted, false);
+            //document.addEventListener("DOMNodeInserted", onNodeInserted, false);
+			const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach((node) => {
+                            if (node.nodeType === 1) { // 1 = Element
+                                onNodeInserted(node);
+                            }
+                        });
+                    }
+                });
+            });
+            const config = { childList: true, subtree: true };
+            observer.observe(document.body, config);
+
             window.addEventListener('scroll', function () {
                 node_to_render_id = null;
                 hideBubble(true);
