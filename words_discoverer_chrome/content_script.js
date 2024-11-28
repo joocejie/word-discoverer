@@ -1,4 +1,5 @@
 var dict_words = null;
+var words_eng_dict = null;
 var dict_idioms = null;
 
 var min_show_rank = null;
@@ -166,7 +167,7 @@ function processMouse(e) {
 }
 
 
-function text_to_hl_nodes(text, dst) {
+function text_to_hl_nodes(text, dst, words_eng_dict) {
     var lc_text = text.toLowerCase();
     var ws_text = lc_text.replace(/[,;()?!`:"'.\s\-\u2013\u2014\u201C\u201D\u2019]/g, " ");
     var ws_text = ws_text.replace(/[^\w ]/g, ".");
@@ -274,7 +275,7 @@ function text_to_hl_nodes(text, dst) {
             var wdclassname = make_class_name(match.normalized);
             var stripped = match.normalized.replace(/\r/g, '');
             stripped = stripped.replace(/\n/g, '');
-            var theDict = get_dict();
+            var theDict = words_eng_dict;  // get_dict();
             if (theDict != null && theDict.hasOwnProperty(stripped)) {
                 span.innerText = span.innerText + '（' + theDict[stripped] + '）';
             }
@@ -311,7 +312,7 @@ function textNodesUnder(el) {
 }
 
 
-function doHighlightText(textNodes) {
+function doHighlightText(textNodes, words_eng_dict) {
     if (textNodes === null || dict_words === null || min_show_rank === null) {
         return;
     }
@@ -331,7 +332,7 @@ function doHighlightText(textNodes) {
             continue; //pathetic hack to skip json data in text (e.g. google images use it).
         }
         new_children = []
-        found_count = text_to_hl_nodes(text, new_children);
+        found_count = text_to_hl_nodes(text, new_children, words_eng_dict);
         if (found_count) {
             num_found += found_count;
             parent_node = textNodes[i].parentNode;
@@ -347,7 +348,7 @@ function doHighlightText(textNodes) {
 }
 
 
-function onNodeInserted(event) {
+function onNodeInserted(event, words_eng_dict) {
     var inobj = event.target;
     if (!inobj)
         return;
@@ -362,7 +363,7 @@ function onNodeInserted(event) {
     }
     if (!classattr || !classattr.startsWith("wdautohl_")) {
         var textNodes = textNodesUnder(inobj);
-        doHighlightText(textNodes);
+        doHighlightText(textNodes, words_eng_dict);
     }
 }
 
@@ -493,8 +494,9 @@ function initForPage() {
         }
     });
 
-    chrome.storage.local.get(['words_discoverer_eng_dict', 'wd_online_dicts', 'wd_idioms', 'wd_hover_settings', 'wd_word_max_rank', 'wd_show_percents', 'wd_is_enabled', 'wd_user_vocabulary', 'wd_hl_settings', 'wd_black_list', 'wd_white_list', 'wd_enable_tts'], function (result) {
+    chrome.storage.local.get(['words_discoverer_eng_dict', 'words_eng_dict', 'wd_online_dicts', 'wd_idioms', 'wd_hover_settings', 'wd_word_max_rank', 'wd_show_percents', 'wd_is_enabled', 'wd_user_vocabulary', 'wd_hl_settings', 'wd_black_list', 'wd_white_list', 'wd_enable_tts'], function (result) {
         dict_words = result.words_discoverer_eng_dict;
+        words_eng_dict = result.words_eng_dict;
         dict_idioms = result.wd_idioms;
         wd_online_dicts = result.wd_online_dicts;
         wd_enable_tts = result.wd_enable_tts;
@@ -536,7 +538,7 @@ function initForPage() {
             });
 
             var textNodes = textNodesUnder(document.body);
-            doHighlightText(textNodes);
+            doHighlightText(textNodes, words_eng_dict);
 
             var bubbleDOM = create_bubble();
             document.body.appendChild(bubbleDOM);
@@ -548,7 +550,7 @@ function initForPage() {
                     if (mutation.type === 'childList') {
                         mutation.addedNodes.forEach((node) => {
                             if (node.nodeType === 1) { // 1 = Element
-                                onNodeInserted(node);
+                                onNodeInserted(node, words_eng_dict);
                             }
                         });
                     }

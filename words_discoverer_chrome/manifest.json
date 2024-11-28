@@ -45,7 +45,8 @@
   "web_accessible_resources": [{ 
     "resources": [
       "eng_dict.txt",
-      "eng_idioms.txt"
+      "eng_idioms.txt",
+      "eng_zhcn.txt"
     ],
     "matches": ["http://*/*", "https://*/*"]
   }],

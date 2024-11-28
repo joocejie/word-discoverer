@@ -30,19 +30,46 @@ function do_load_dictionary(file_text) {
 
 function load_eng_dictionary() {
     var file_path = chrome.runtime.getURL("eng_dict.txt");
-    /*
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            do_load_dictionary(xhr.responseText);
-        }
-    }
-    xhr.open('GET', file_path, true);
-    xhr.send(null);
-    */
     fetch(file_path).then(response => response.text())
       .then(data => {
         do_load_dictionary(data);
+    })
+    .catch(error => console.error(error));
+}
+
+function do_load_eng_zhcn(file_text) {
+    var lines = file_text.split('\n');
+    var en_zh_words = {};
+    for (var lno = 0; lno < lines.length; ++lno) {
+        var fields = lines[lno].split('\t');
+        if (lno + 1 === lines.length && fields.length == 1)
+            break;
+        var words = fields[0].split(' ');
+        for (var i = 0; i + 1 < words.length; ++i) {
+            key = words.slice(0, i + 1).join(' ');
+            en_zh_words[key] = -1;
+        }
+        key = fields[0];
+        en_zh_words[key] = fields[1];
+    }
+    local_storage = chrome.storage.local;
+    local_storage.set({"words_eng_dict": en_zh_words});
+}
+
+
+function load_eng_zhcn_dict() {
+    var file_path = chrome.runtime.getURL("eng_zhcn.txt");
+    var uiLang = chrome.i18n.getUILanguage();
+    uiLang = uiLang.split('-')[0];
+    if (uiLang == 'zh') {
+        file_path = chrome.runtime.getURL("eng_zhcn.txt");
+    } else {
+        //TODO: other langs
+    }
+
+    fetch(file_path).then(response => response.text())
+      .then(data => {
+        do_load_eng_zhcn(data);
     })
     .catch(error => console.error(error));
 }
@@ -70,16 +97,6 @@ function do_load_idioms(file_text) {
 
 function load_idioms() {
     file_path = chrome.runtime.getURL("eng_idioms.txt");
-    /*
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            do_load_idioms(xhr.responseText);
-        }
-    }
-    xhr.open('GET', file_path, true);
-    xhr.send(null);
-    */
     fetch(file_path).then(response => response.text())
       .then(data => {
         do_load_idioms(data);
@@ -464,8 +481,9 @@ function initialize_extension() {
         }
     });
 
-    chrome.storage.local.get(['words_discoverer_eng_dict', 'wd_hl_settings', 'wd_online_dicts', 'wd_hover_settings', 'wd_idioms', 'wd_show_percents', 'wd_is_enabled', 'wd_user_vocabulary', 'wd_black_list', 'wd_white_list', 'wd_gd_sync_enabled', 'wd_enable_tts'], function (result) {
+    chrome.storage.local.get(['words_discoverer_eng_dict', 'words_eng_dict', 'wd_hl_settings', 'wd_online_dicts', 'wd_hover_settings', 'wd_idioms', 'wd_show_percents', 'wd_is_enabled', 'wd_user_vocabulary', 'wd_black_list', 'wd_white_list', 'wd_gd_sync_enabled', 'wd_enable_tts'], function (result) {
         load_eng_dictionary();
+        load_eng_zhcn_dict();
         load_idioms();
         wd_hl_settings = result.wd_hl_settings;
         if (typeof wd_hl_settings == 'undefined') {
