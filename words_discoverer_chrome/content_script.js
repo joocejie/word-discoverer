@@ -101,6 +101,7 @@ function renderBubble() {
     }
 
     wdSpanText = node_to_render.textContent;
+    wdSpanText = wdSpanText.split('（')[0];
     bubbleDOM = document.getElementById("wd_selection_bubble");
     bubbleText = document.getElementById("wd_selection_bubble_text");
     bubbleFreq = document.getElementById("wd_selection_bubble_freq");
