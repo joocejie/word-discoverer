@@ -490,16 +490,16 @@ function initialize_extension() {
             word_hl_params = {
                 enabled: true,
                 quoted: false,
-                bold: true,
+                bold: false,
                 useBackground: false,
                 backgroundColor: "rgb(255, 248, 220)",
                 useColor: true,
-                color: "red"
+                color: "black"
             };
             idiom_hl_params = {
                 enabled: true,
                 quoted: false,
-                bold: true,
+                bold: false,
                 useBackground: false,
                 backgroundColor: "rgb(255, 248, 220)",
                 useColor: true,
