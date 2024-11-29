@@ -452,14 +452,14 @@ function initialize_extension() {
                     chrome.action.setIcon({path: "result48.png", tabId: sender.tab.id}, function () {
                         if (result.wd_gd_sync_enabled) {
                             if (result.wd_last_sync_error == null) {
-                                chrome.browserAction.setBadgeText({text: 'sync', tabId: sender.tab.id});
-                                chrome.browserAction.setBadgeBackgroundColor({
+                                chrome.action.setBadgeText({text: 'sync', tabId: sender.tab.id});
+                                chrome.action.setBadgeBackgroundColor({
                                     color: [25, 137, 0, 255],
                                     tabId: sender.tab.id
                                 });
                             } else {
-                                chrome.browserAction.setBadgeText({text: 'err', tabId: sender.tab.id});
-                                chrome.browserAction.setBadgeBackgroundColor({
+                                chrome.action.setBadgeText({text: 'err', tabId: sender.tab.id});
+                                chrome.action.setBadgeBackgroundColor({
                                     color: [137, 0, 0, 255],
                                     tabId: sender.tab.id
                                 });
