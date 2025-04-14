@@ -101,7 +101,7 @@ function make_hl_style(hl_params) {
         result += "color:" + hl_params.color + ";";
     if (!result)
         return undefined;
-    result += "font-size:inherit;display:inline;";
+    result += "font-size:inherit;display:inline;visibility:visible !important;";
     return result;
 }
 
