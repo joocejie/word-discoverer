@@ -374,7 +374,7 @@ function unhighlight(lemma) {
     var hlNodes = document.getElementsByClassName(wdclassname);
     while (hlNodes && hlNodes.length > 0) {
         var span = hlNodes[0];
-        span.setAttribute("style", "font-weight:inherit;color:inherit;font-size:inherit;background-color:inherit;display:inline;");
+        span.setAttribute("style", "font-weight:inherit;color:inherit;font-size:inherit;background-color:inherit;display:inline;visibility:visible !important");
         span.setAttribute("class", "wdautohl_none_none");
     }
 }
